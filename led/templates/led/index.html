@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>登录</title>
+</head>
+<body>
+<center>
+<h1>用户登录界面</h1>
+
+<form action = "{% url 'led:check' %}" method="post">
+	{% csrf_token %}
+	用户名 :<input type="text" name="username"> <br>
+	密码 :<input type="text" name="userpassword"> <br>
+	<input type="submit" value="确定">	
+	<input type="reset" value="重置">
+</form>
+</center>
+</body>
+</html>

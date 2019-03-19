@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>用户控制界面</title>
+</head>
+<body>
+	<form action="{% url 'led:add_led' user_id %}" method="post">
+		{% csrf_token %}
+		<input type="button" value="添加LED显示屏" onclick="submit()">
+	</form>
+	<ul>
+		{% for led in led_list.lednumber_set.all %}
+		<li>LED名称：{{led.led_text}} <br> LED地址:{{led.address_text}}</li>
+		{% endfor %}
+		<br>
+		<li>以上是您所拥有LED信息</li>
+	</ul>
+</body>
+</html>
