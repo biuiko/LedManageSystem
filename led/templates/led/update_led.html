@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>修改LED信息</title>
+</head>
+<body>
+<center>
+	<h3>填写你想要修改的LED信息</h3>
+	<form action="{% url 'led:led_update' led_id user_id %}" method="post">
+		{% csrf_token %}
+		LED名称：<input type="text" name="ledname" placeholder="{{led_id.led_text}}">
+		LED地址：<input type="text" name="ledaddress" placeholder="{{led_id.address_text}}">
+		<input type="submit" value="确定">
+	</form>
+</center>
+</body>
+</html>

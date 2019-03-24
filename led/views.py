@@ -25,7 +25,7 @@ def movie_show(request):
 def check(request):
 	'检验用户登录'
 	if not request.method == 'POST':
-		return HttpResponse("what")
+		return HttpResponse("你的打开方式有一点点奇怪哦")
 	user_name = request.POST.get('username')
 	user_password = request.POST.get('userpassword')
 	if not all([user_name,user_password]):
@@ -34,7 +34,7 @@ def check(request):
 	for user in users:
 		if user.user_name == user_name and user.user_password==user_password:
 			return HttpResponseRedirect(reverse('led:choice', args = (user.id,)))
-	return HttpResponse("hello")
+	return HttpResponse("我没有找到你诶")
 
 def add_led(request,user_id):
 	'点击添加按钮到添加LED界面'
@@ -57,3 +57,46 @@ def add_led_data(request,user_id):
 		}
 		# return HttpResponseRedirect(reverse('led:choice',{'user_id':user_id,'led_list':led_list}))
 		return render(request,'led/choice_page.html',context)
+
+def led_operation(request,user_id):
+	'处理关于LED的操作'
+	if request.method == 'POST':
+		try:
+			led_id = request.POST['led_choice']
+			led_op = request.POST['op']
+			if not all([led_id,led_op]):
+				return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
+			if led_op == "d":
+				LedNumber.objects.filter(id=led_id).delete()
+				return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
+			elif led_op == "u":
+				print('now at op=u')
+				context = {
+					'led_id' : led_id,
+					'user_id':user_id
+				}
+				return render(request,'led/update_led.html',context)
+				# return HttpResponse("hello")
+				# return render(request,'led/update_led.html',context)
+		except:
+			print('出错啦')
+			return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
+
+def led_update(request,led_id,user_id):
+	'修改LED信息'
+	if not request.method == 'POST':
+		return HttpResponse("你的打开方式有一点点奇怪哦")
+	try:
+		new_led_text = request.POST.get('ledname')
+		if new_led_text != "":
+			LedNumber.objects.filter(id = led_id).update(led_text = new_led_text)
+	except:
+		pass
+	try:
+		new_address_text = request.POST.get('ledaddress')
+		if new_address_text != "":
+			LedNumber.objects.filter(id=led_id).update(address_text = new_address_text)
+	except:
+		pass
+
+	return HttpResponseRedirect(reverse('led:choice',args = (user_id,)))
