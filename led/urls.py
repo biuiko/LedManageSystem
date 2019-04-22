@@ -12,4 +12,5 @@ urlpatterns = [
 	path('<int:user_id>/add_led_data/',views.add_led_data,name='add_led_data'),
 	path('<int:user_id>/led_operation/',views.led_operation,name='led_operation'),
 	path('<int:led_id>/<int:user_id>/led_update/',views.led_update,name='led_update'),
+	path('<int:user_id>/add_picture',views.add_picture,name='add_picture'),
 ]

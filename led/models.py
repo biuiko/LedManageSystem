@@ -13,3 +13,9 @@ class LedNumber(models.Model):
 	address_text = models.CharField(max_length = 200,null = True,blank = True) #LED位置信息
 	def __str__(self):
 		return self.led_text
+
+class Picture(models.Model):
+	pic_url = models.CharField(max_length=500)
+	custom = models.ForeignKey(Custom,on_delete=models.CASCADE)
+	def __str__(self):
+		return self.pic_url

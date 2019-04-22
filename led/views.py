@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
-from .models import Custom,LedNumber
+from .models import Custom,LedNumber,Picture
 # Create your views here.
 
 def index(request):
@@ -32,6 +32,7 @@ def check(request):
 		return render(request,'led/index.html')
 	users = Custom.objects.all()
 	for user in users:
+		print("find")
 		if user.user_name == user_name and user.user_password==user_password:
 			return HttpResponseRedirect(reverse('led:choice', args = (user.id,)))
 	return HttpResponse("我没有找到你诶")
@@ -78,6 +79,16 @@ def led_operation(request,user_id):
 				return render(request,'led/update_led.html',context)
 				# return HttpResponse("hello")
 				# return render(request,'led/update_led.html',context)
+			elif led_op=="l":
+				user = Custom.objects.get(pk = user_id)
+				urls = user.picture_set.all()
+				# url=Picture.objects.filter(Picture.custom.id = 'user_id')
+				context = {
+					# 'user_id':user_id,
+					'urls':urls,
+				}
+				print(urls)
+				return render(request,'led/show_led.html',context)
 		except:
 			print('出错啦')
 			return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
@@ -100,3 +111,16 @@ def led_update(request,led_id,user_id):
 		pass
 
 	return HttpResponseRedirect(reverse('led:choice',args = (user_id,)))
+
+def add_picture(request,user_id):
+	'添加图片的url'
+	if request.method == 'POST':
+		c = Custom.objects.get(pk = user_id)
+		# real_url = request.POST.get('pic_url')
+		
+		c.picture_set.create(pic_url = request.POST.get('pic_url'))
+		c.save()
+	context={
+		'user_id':user_id,
+	}
+	return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))

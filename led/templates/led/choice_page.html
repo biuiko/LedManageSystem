@@ -10,6 +10,12 @@
 		<input type="button" value="添加LED显示屏" onclick="submit()">
 	</form>
 	<br><br>
+	<form action="{% url 'led:add_picture' user_id %}" method="post" >
+		{% csrf_token %}
+		图片网址：<input type="text" name="pic_url">
+		<input type="submit" value="确定">
+	</form>
+	<br><br>
 	<h3>所有LED信息：</h3>
 	<table border="1">
 		<tr>
@@ -32,7 +38,7 @@
 		<input type="radio" name="op" value="d" ><label>删除LED</label><br>
 		<input type="radio" name="op" value="u"><label>修改LED信息</label><br>
 		<input type="radio" name="op" value="l"><label>查看LED内容</label><br>
-		<input type="radio" name="op" value="s"> <label>当前LED播放模式为：，修改播放模式</label><br>
+		<!-- <input type="radio" name="op" value="s"> <label>当前LED播放模式为：，修改播放模式</label><br> -->
 	<input type="submit" value="确定">
 </form>
 </center>

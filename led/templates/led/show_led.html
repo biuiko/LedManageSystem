@@ -1,0 +1,30 @@
+  <title>Document</title>
+ </head>
+ <body OnLoad="swapPic()">
+  <script language="javascript" type="text/javascript">
+    var ranl = 0;
+    var useRand = 0;
+    images = new Array;
+	images[1] = new Image();
+	images[1].src = "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=919646662,166522488&fm=26&gp=0.jpg";
+	images[2] = new Image();
+	images[2].src = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2100067790,1782582700&fm=26&gp=0.jpg";
+	images[3] = new Image();
+	images[3].src = "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=919646662,166522488&fm=26&gp=0.jpg";
+	images[4] = new Image();
+	images[4].src = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2100067790,1782582700&fm=26&gp=0.jpg";
+	function swapPic(){
+	   var imgnum = images.length-1;
+       do{
+	    var randnum = Math.random();
+		randl = Math.round((imgnum-1)*randnum)+1;
+	   }while(randl==useRand);
+        useRand = randl;
+        document.randimg.src = images[useRand].src		
+		setTimeout('swapPic()',2000);
+	}
+	
+  </script>
+  <img name ="randimg" src="images/pic.jpg">
+ </body>
+<ml>
