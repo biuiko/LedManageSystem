@@ -13,4 +13,5 @@ urlpatterns = [
 	path('<int:user_id>/led_operation/',views.led_operation,name='led_operation'),
 	path('<int:led_id>/<int:user_id>/led_update/',views.led_update,name='led_update'),
 	path('<int:user_id>/add_picture',views.add_picture,name='add_picture'),
+	path('led/<int:user_id>/<int:led_id>',views.led_show,name='led_show'),
 ]

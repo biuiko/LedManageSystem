@@ -56,7 +56,7 @@ def add_led_data(request,user_id):
 			'led_list' : led_list,
 			'user_id':user_id
 		}
-		# return HttpResponseRedirect(reverse('led:choice',{'user_id':user_id,'led_list':led_list}))
+		# return HttpResponseRedirect(reverse('led:choice',context))
 		return render(request,'led/choice_page.html',context)
 
 def led_operation(request,user_id):
@@ -84,12 +84,16 @@ def led_operation(request,user_id):
 				urls = user.picture_set.all()
 				# url=Picture.objects.filter(Picture.custom.id = 'user_id')
 				context = {
-					# 'user_id':user_id,
+					'user_id':user_id,
+					'led_id':led_id,
 					'urls':urls,
 				}
-				print(urls)
-				return render(request,'led/show_led.html',context)
+				return led_show(request,user_id,led_id)
+				# print(urls)
+				# return render(request,'led/show_led.html',context)
+				# HttpResponseRedirect(reverse('led:led_show', args = (user_id,led_id,)))
 		except:
+			print(led_op)
 			print('出错啦')
 			return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
 
@@ -116,11 +120,16 @@ def add_picture(request,user_id):
 	'添加图片的url'
 	if request.method == 'POST':
 		c = Custom.objects.get(pk = user_id)
-		# real_url = request.POST.get('pic_url')
-		
+		real_url = request.POST.get('pic_url')
+		print(real_url)
 		c.picture_set.create(pic_url = request.POST.get('pic_url'))
 		c.save()
 	context={
 		'user_id':user_id,
 	}
 	return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
+
+def led_show(request,user_id,led_id):
+	'显示led的内容'
+	if request.method == 'POST' or request.method=='GET':
+		return render(request,'led/show_led.html')
