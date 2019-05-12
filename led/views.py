@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
 from .models import Custom,LedNumber,Picture
+import json
 # Create your views here.
 
 def index(request):
@@ -80,18 +81,7 @@ def led_operation(request,user_id):
 				# return HttpResponse("hello")
 				# return render(request,'led/update_led.html',context)
 			elif led_op=="l":
-				user = Custom.objects.get(pk = user_id)
-				urls = user.picture_set.all()
-				# url=Picture.objects.filter(Picture.custom.id = 'user_id')
-				context = {
-					'user_id':user_id,
-					'led_id':led_id,
-					'urls':urls,
-				}
 				return led_show(request,user_id,led_id)
-				# print(urls)
-				# return render(request,'led/show_led.html',context)
-				# HttpResponseRedirect(reverse('led:led_show', args = (user_id,led_id,)))
 		except:
 			print(led_op)
 			print('出错啦')
@@ -132,4 +122,15 @@ def add_picture(request,user_id):
 def led_show(request,user_id,led_id):
 	'显示led的内容'
 	if request.method == 'POST' or request.method=='GET':
-		return render(request,'led/show_led.html')
+		user = Custom.objects.get(pk = user_id)
+		get_urls = user.picture_set.all()
+		urls = []
+		for i in get_urls:
+			urls.append(i.pic_url)
+		context = {
+			'user_id':user_id,
+			'led_id':led_id,
+			'urls' : json.dumps(urls),
+		}
+		print('now at look led')
+		return render(request,'led/show_led.html',context)

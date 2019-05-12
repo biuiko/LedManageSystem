@@ -1,24 +1,26 @@
+<html>
  <head>
   <title>Document</title>
  </head>
  <body OnLoad="swapPic()">
   <script language="javascript" type="text/javascript">
+  	console.log('js')
+  	
+  	var img_url = {{ urls|safe }};
+  	console.log('imgurl')
+  	console.log(img_url)
+  	console.log(img_url);
     var ranl = 0;
     var useRand = 0;
     images = new Array;
-	images[1] = new Image();
-	images[1].src = "https://ww3.sinaimg.cn/bmiddle/77b685fbly1g2e4mfv6qvj20yi22odl8.jpg";
-	images[2] = new Image();
-	images[2].src = "https://ww3.sinaimg.cn/bmiddle/77b685fbly1g2e4meq1huj20yi22oq9x.jpg";
-	images[3] = new Image();
-	images[3].src = "https://ww4.sinaimg.cn/bmiddle/77b685fbly1g2e4mgdeuaj20yi22otej.jpg";
-	images[4] = new Image();
-	images[4].src = "https://ww2.sinaimg.cn/bmiddle/77b685fbly1g2e4mgzr8wj20yi22o448.jpg";
-	images[5] = new Image();
-	images[5].src = "https://ww1.sinaimg.cn/bmiddle/60ed0cf7ly1g2evcuoyxlj20ty1hcaxy.jpg";
+    console.log('now add url')
+    for(var i in img_url)
+    {
+    	console.log(i);
+    	images[i] = new Image();
+    	images[i].src = img_url[i];
+    }
 
-	images[6] = new Image();
-	images[6].src = "https://ww1.sinaimg.cn/bmiddle/60ed0cf7ly1g2evcuoyxlj20ty1hcaxy.jpg";
 	function swapPic(){
 	   var imgnum = images.length-1;
        do{
@@ -33,3 +35,4 @@
   </script>
   <img name ="randimg" src="images/pic.jpg">
  </body>
+ </html>
