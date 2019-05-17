@@ -19,3 +19,9 @@ class Picture(models.Model):
 	custom = models.ForeignKey(Custom,on_delete=models.CASCADE)
 	def __str__(self):
 		return self.pic_url
+
+class Video(models.Model):
+	video_url = models.CharField(max_length=500)
+	custom = models.ForeignKey(Custom,on_delete=models.CASCADE)
+	def __str__(self):
+		return self.video_url

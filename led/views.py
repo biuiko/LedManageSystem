@@ -80,8 +80,10 @@ def led_operation(request,user_id):
 				return render(request,'led/update_led.html',context)
 				# return HttpResponse("hello")
 				# return render(request,'led/update_led.html',context)
-			elif led_op=="l":
-				return led_show(request,user_id,led_id)
+			elif led_op=="p":
+				return led_show_picture(request,user_id,led_id)
+			elif led_op=="v":
+				return led_show_video(request,user_id,led_id)
 		except:
 			print(led_op)
 			print('出错啦')
@@ -119,8 +121,21 @@ def add_picture(request,user_id):
 	}
 	return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
 
-def led_show(request,user_id,led_id):
-	'显示led的内容'
+def add_video(request,user_id):
+	'添加视频的url'
+	if request.method == 'POST':
+		c = Custom.objects.get(pk = user_id)
+		real_url = request.POST.get('pic_url')
+		print(real_url)
+		c.video_set.create(video_url = request.POST.get('video_url'))
+		c.save()
+	context={
+		'user_id':user_id,
+	}
+	return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
+
+def led_show_picture(request,user_id,led_id):
+	'显示led的图片内容'
 	if request.method == 'POST' or request.method=='GET':
 		user = Custom.objects.get(pk = user_id)
 		get_urls = user.picture_set.all()
@@ -134,3 +149,18 @@ def led_show(request,user_id,led_id):
 		}
 		print('now at look led')
 		return render(request,'led/show_led.html',context)
+def led_show_video(request,user_id,led_id):
+	'显示led的视频内容'
+	if request.method == 'POST' or request.method=='GET':
+		user = Custom.objects.get(pk = user_id)
+		get_urls = user.video_set.all()
+		urls = []
+		for i in get_urls:
+			urls.append(i.video_url)
+		context = {
+			'user_id':user_id,
+			'led_id':led_id,
+			'urls' : json.dumps(urls),
+		}
+		print('now at look led')
+		return render(request,'led/show_video_led.html',context)

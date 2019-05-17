@@ -2,7 +2,7 @@ from django.contrib import admin
 #adminname: admin
 #psw: weiyubing
 # Register your models here.
-from .models import Custom,LedNumber,Picture
+from .models import Custom,LedNumber,Picture,Video
 
 @admin.register(Custom)
 class CustomAdmin(admin.ModelAdmin):
@@ -18,3 +18,9 @@ class LedNumberAdmin(admin.ModelAdmin):
 class PictureAdmin(admin.ModelAdmin):
 	list_display = ('id','custom','pic_url')
 	ordering = ('id',)
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+	list_display = ('id','custom','video_url')
+	ordering = ('id',)
+

@@ -16,6 +16,12 @@
 		<input type="submit" value="确定">
 	</form>
 	<br><br>
+		<form action="{% url 'led:add_video' user_id %}" method="post" >
+		{% csrf_token %}
+		视频网址：<input type="text" name="video_url">
+		<input type="submit" value="确定">
+	</form>
+	<br><br>
 	<h3>所有LED信息：</h3>
 	<table border="1">
 		<tr>
@@ -37,7 +43,9 @@
 		<h4>请选择所需要的操作</h4>
 		<input type="radio" name="op" value="d" ><label>删除LED</label><br>
 		<input type="radio" name="op" value="u"><label>修改LED信息</label><br>
-		<input type="radio" name="op" value="l"><label>查看LED内容</label><br>
+		<input type="radio" name="op" value="p"><label>查看LED图片内容</label><br>
+		<input type="radio" name="op" value="v"><label>查看LED视频内容</label><br>
+
 		<!-- <input type="radio" name="op" value="s"> <label>当前LED播放模式为：，修改播放模式</label><br> -->
 	<input type="submit" value="确定">
 </form>
