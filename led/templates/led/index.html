@@ -1,22 +1,4 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-	<title>登录</title>
-</head>
-<body>
-<center>
-<h1>用户登录界面</h1>
 
-<form action = "{% url 'led:check' %}" method="post">
-	{% csrf_token %}
-	用户名 :<input type="text" name="username"> <br>
-	密码 :<input type="text" name="userpassword"> <br>
-	<input type="submit" value="确定">	
-	<input type="reset" value="重置">
-</form>
-</center>
-</body>
-</html> -->
 {% load staticfiles %}
 <!DOCTYPE html>
 <html>
@@ -57,7 +39,6 @@
                   <div class="logo">
                     <h1>LED显示屏管理系统</h1>
                   </div>
-                  <p>这里是为用户提供的后端控制界面</p>
                 </div>
               </div>
             </div>
@@ -86,9 +67,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="copyrights text-center">
-        <p>Design by 魏钰冰</p>
       </div>
     </div>
     <!-- JavaScript files-->

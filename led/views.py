@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
-from .models import Custom,LedNumber,Picture
+from .models import Custom,LedNumber,Picture,Video
 import json
 # Create your views here.
 
@@ -12,16 +12,14 @@ def index(request):
 
 def choice_page(request,user_id):
 	'登录后选择操作界面'
-	led_list = Custom.objects.get(pk =user_id)
+	user = Custom.objects.get(pk =user_id)
+	led_list = user.lednumber_set.all()
 	context = {
 		'led_list' : led_list,
 		'user_id':user_id
 	}
-	return render(request,'led/choice_page.html',context)
-
-def movie_show(request):
-	'LED放映界面'
-	return HttpResponse("hello")
+	# return render(request,'led/choice_page.html',context)
+	return render(request,'led/LedMessage.html',context)
 
 def check(request):
 	'检验用户登录'
@@ -38,27 +36,62 @@ def check(request):
 			return HttpResponseRedirect(reverse('led:choice', args = (user.id,)))
 	return HttpResponse("我没有找到你诶")
 
-def add_led(request,user_id):
-	'点击添加按钮到添加LED界面'
-	context={}
-	context['user_id'] = user_id
-	return render(request,'led/add_led.html',context)
-	# return HttpResponseRedirect(reverse('led:add_led',args=(user_id,)))
-	# return HttpResponse("hello you clicked")
-
 def add_led_data(request,user_id):
 	'处理添加数据成功后跳到选择操作界面'
 	if request.method == 'POST':
 		c = Custom.objects.get(pk = user_id)
 		c.lednumber_set.create(led_text = request.POST.get('led_text'),address_text = request.POST.get('led_address'))
 		c.save()
-		led_list = Custom.objects.get(pk =user_id)
+		led_list = c.lednumber_set.all()
 		context = {
 			'led_list' : led_list,
 			'user_id':user_id
 		}
 		# return HttpResponseRedirect(reverse('led:choice',context))
-		return render(request,'led/choice_page.html',context)
+		return render(request,'led/LedMessage.html',context)
+
+def del_led_data(request,user_id):
+	'删除成功后跳回LED管理界面'
+	if request.method == 'POST':
+		led_id = request.POST['led_choice']
+		LedNumber.objects.filter(id=led_id).delete()
+		user = Custom.objects.get(pk =user_id)
+		led_list = user.lednumber_set.all()
+		context = {
+			'led_list' : led_list,
+			'user_id':user_id
+		}
+		return render(request,'led/LedMessage.html',context)
+
+def del_pic_data(request,user_id):
+	'删除成功后跳回图片管理界面'
+	if request.method == 'POST':
+		pic_id = request.POST['pic']
+		Picture.objects.filter(id=pic_id).delete()
+		user = Custom.objects.get(pk = user_id)
+		pics = user.picture_set.all()
+		leds = user.lednumber_set.all()
+		context = {
+			'leds':leds,
+			'user_id' : user_id,
+			'pics' : pics,
+		}
+	return render(request,'led/manage_pic.html',context)
+
+def del_video_data(request,user_id):
+	'删除成功后跳回视频管理界面'
+	if request.method == 'POST':
+		video_id = request.POST['video']
+		Video.objects.filter(id=video_id).delete()
+		user = Custom.objects.get(pk = user_id)
+		videos = user.video_set.all()
+		leds = user.lednumber_set.all()
+		context = {
+			'leds':leds,
+			'user_id' : user_id,
+			'videos' : videos,
+		}
+	return render(request,'led/manage_video.html',context)
 
 def led_operation(request,user_id):
 	'处理关于LED的操作'
@@ -68,18 +101,6 @@ def led_operation(request,user_id):
 			led_op = request.POST['op']
 			if not all([led_id,led_op]):
 				return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
-			if led_op == "d":
-				LedNumber.objects.filter(id=led_id).delete()
-				return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
-			elif led_op == "u":
-				print('now at op=u')
-				context = {
-					'led_id' : led_id,
-					'user_id':user_id
-				}
-				return render(request,'led/update_led.html',context)
-				# return HttpResponse("hello")
-				# return render(request,'led/update_led.html',context)
 			elif led_op=="p":
 				return led_show_picture(request,user_id,led_id)
 			elif led_op=="v":
@@ -119,20 +140,20 @@ def add_picture(request,user_id):
 	context={
 		'user_id':user_id,
 	}
-	return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
+	return HttpResponseRedirect(reverse('led:pic_manage', args = (user_id,)))
 
 def add_video(request,user_id):
 	'添加视频的url'
 	if request.method == 'POST':
 		c = Custom.objects.get(pk = user_id)
-		real_url = request.POST.get('pic_url')
+		real_url = request.POST.get('video_url')
 		print(real_url)
 		c.video_set.create(video_url = request.POST.get('video_url'))
 		c.save()
 	context={
 		'user_id':user_id,
 	}
-	return HttpResponseRedirect(reverse('led:choice', args = (user_id,)))
+	return HttpResponseRedirect(reverse('led:video_manage', args = (user_id,)))
 
 def led_show_picture(request,user_id,led_id):
 	'显示led的图片内容'
@@ -164,3 +185,27 @@ def led_show_video(request,user_id,led_id):
 		}
 		print('now at look led')
 		return render(request,'led/show_video_led.html',context)
+
+def pic_manage(request,user_id):
+	if request.method=='POST':
+		user = Custom.objects.get(pk = user_id)
+		pics = user.picture_set.all()
+		leds = user.lednumber_set.all()
+		context = {
+			'leds':leds,
+			'user_id' : user_id,
+			'pics' : pics,
+		}
+		return render(request,'led/manage_pic.html',context)
+
+def video_manage(request,user_id):
+	if request.method=='POST':
+		user = Custom.objects.get(pk = user_id)
+		videos = user.video_set.all()
+		leds = user.lednumber_set.all()
+		context = {
+			'leds':leds,
+			'user_id' : user_id,
+			'videos' : videos,
+		}
+		return render(request,'led/manage_video.html',context)
