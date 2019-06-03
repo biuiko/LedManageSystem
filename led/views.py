@@ -137,10 +137,16 @@ def add_picture(request,user_id):
 		print(real_url)
 		c.picture_set.create(pic_url = request.POST.get('pic_url'))
 		c.save()
-	context={
-		'user_id':user_id,
+	user = Custom.objects.get(pk = user_id)
+	pics = user.picture_set.all()
+	leds = user.lednumber_set.all()
+	context = {
+		'leds':leds,
+		'user_id' : user_id,
+		'pics' : pics,
 	}
-	return HttpResponseRedirect(reverse('led:pic_manage', args = (user_id,)))
+	print("goto pic_manage.html")
+	return render(request,'led/manage_pic.html',context)
 
 def add_video(request,user_id):
 	'添加视频的url'
@@ -150,10 +156,16 @@ def add_video(request,user_id):
 		print(real_url)
 		c.video_set.create(video_url = request.POST.get('video_url'))
 		c.save()
-	context={
-		'user_id':user_id,
+	user = Custom.objects.get(pk = user_id)
+	videos = user.video_set.all()
+	leds = user.lednumber_set.all()
+	context = {
+		'leds':leds,
+		'user_id' : user_id,
+		'videos' : videos,
 	}
-	return HttpResponseRedirect(reverse('led:video_manage', args = (user_id,)))
+	return render(request,'led/manage_video.html',context)
+	# return HttpResponseRedirect(reverse('led:video_manage', args = (user_id,)))
 
 def led_show_picture(request,user_id,led_id):
 	'显示led的图片内容'
@@ -170,6 +182,7 @@ def led_show_picture(request,user_id,led_id):
 		}
 		print('now at look led')
 		return render(request,'led/show_led.html',context)
+
 def led_show_video(request,user_id,led_id):
 	'显示led的视频内容'
 	if request.method == 'POST' or request.method=='GET':
