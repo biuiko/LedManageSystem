@@ -25,7 +25,7 @@
 
 直接访问视频播放界面：http://118.24.104.99/led/video/[用户id]/[LEDid]
 
-直接访问图片播放界面：http://http://118.24.104.99/led/picture/[用户id]/[LEDid]
+直接访问图片播放界面：http://118.24.104.99/led/picture/[用户id]/[LEDid]
 
 ## 杂七杂八
 - 基于Django开发
